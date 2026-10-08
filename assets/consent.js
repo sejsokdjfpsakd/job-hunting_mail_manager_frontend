@@ -18,8 +18,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!res.ok) throw new Error('Not logged in');
   } catch (e) {
     // If not logged in, redirect to login page (we can just redirect to index.html and they'll have to restart the flow)
-    // In a real app we'd save the state and redirect back here after login
-    window.location.href = 'index.html';
+    // We pass the current URL as a redirect parameter so they come back here after login
+    window.location.href = 'index.html?redirect=' + encodeURIComponent(window.location.href);
     return;
   }
   

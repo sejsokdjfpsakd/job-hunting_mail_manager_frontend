@@ -60,9 +60,14 @@ document.addEventListener('DOMContentLoaded', () => {
         body: JSON.stringify(response)
       });
       const result = await verRes.json();
-      
       if (result.success) {
-        window.location.href = 'app.html';
+        const redirectUrl = new URLSearchParams(window.location.search).get('redirect');
+        if (redirectUrl) {
+          window.location.href = redirectUrl;
+        } else {
+          // Fallback if not coming from consent flow
+          alert('Login successful! You can close this page.');
+        }
       } else {
         throw new Error(result.error || 'Login failed');
       }
