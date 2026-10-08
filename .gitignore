@@ -1,0 +1,15 @@
+# Environments & Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Runtime & dynamic data
+data/
+packages/
+

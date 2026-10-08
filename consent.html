@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mail Manager - Consent</title>
+  <link rel="stylesheet" href="assets/style.css">
+  <script src="assets/consent.js" defer></script>
+</head>
+<body>
+  <div class="glass-container consent-box">
+    <h1>Authorization Request</h1>
+    <div class="app-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+    </div>
+    <p class="subtitle"><span id="client-name">An application</span> wants to connect to your Mail Manager.</p>
+    
+    <div class="permissions-list">
+      <div class="permission-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span>Read your emails and folders</span>
+      </div>
+      <div class="permission-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+        <span>Manage folders and auto-label rules</span>
+      </div>
+      <div class="permission-item">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>Access valid for 30 days of inactivity</span>
+      </div>
+    </div>
+    
+    <div class="actions">
+      <button id="deny-btn" class="btn secondary-btn">Cancel</button>
+      <button id="approve-btn" class="btn primary-btn">Authorize</button>
+    </div>
+    <div id="consent-error" class="error-text"></div>
+  </div>
+</body>
+</html>
