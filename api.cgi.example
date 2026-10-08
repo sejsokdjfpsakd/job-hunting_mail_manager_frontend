@@ -1,0 +1,11 @@
+#!/usr/local/bin/python3
+# 1. ご利用のサーバー環境の Python 3 パスに合わせてシェバンを変更してください
+#    (例: #!/usr/local/bin/python3, #!/usr/bin/env python3 など)
+
+# 2. 必要に応じて依存パッケージ (packages/) へのパスを通します
+#    (※ 通常は bootstrap.py 内で自動追加されますが、明示的に設定する場合は以下を記述・有効化してください)
+# import os, sys
+# sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'packages'))
+
+import bootstrap
+bootstrap.run_cgi()

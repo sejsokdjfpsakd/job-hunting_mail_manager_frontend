@@ -22,8 +22,9 @@ pip install -r requirements.txt -t packages/
 > アップロード後、`api.cgi` の先頭部分で `sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'packages'))` のように記述し、パスが通るように設定します。
 
 ### 3. CGI スクリプトの設定
-1. `api.cgi` のパーミッションを `755` (実行可能) に変更します。
+1. `api.cgi.example` をコピーして `api.cgi` を作成します（`cp api.cgi.example api.cgi`）。
 2. `api.cgi` の先頭のシェバン（`#!/usr/bin/env python3` など）が、利用するレンタルサーバーの Python 3 のパスに合っているか確認・修正してください（例: `#!/usr/local/bin/python3`）。
+3. `api.cgi` のパーミッションを `755` (実行可能) に変更します。
 
 ### 4. 環境変数の設定 (.env の作成)
 本番環境で動作させるには、必ず `.env` ファイルを作成する必要があります。
@@ -47,4 +48,21 @@ cp .env.example .env
 
 ### 5. データディレクトリ
 `data/` フォルダが作成され、実行ユーザーに書き込み権限が付与されていることを確認してください。ルール情報や実行状態がここに JSON 形式で保存されます。
+
+### 6. 初回ログイン（パスキー登録）
+本システムを利用するにはパスキーの登録が必要です。初回登録は以下のコマンドで発行される専用URLから行います。
+
+```bash
+python manage.py passkey-setup
+```
+
+実行後、コンソールに以下のようなURLが表示されます。
+
+```text
+以下のURLをブラウザで開いてパスキーを登録してください (15分間有効):
+  https://your-domain.sakura.ne.jp/mailmgr/?setup=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+```
+
+表示されたURLをブラウザで開き、「Register new Passkey」からPCやスマートフォンの認証（指紋・顔認証など）を登録してください。
+※ セットアップURLは **15分間** のみ有効です。期限切れの場合はコマンドを再実行してください。
 

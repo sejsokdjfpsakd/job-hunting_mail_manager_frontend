@@ -13,3 +13,7 @@ __pycache__/
 data/
 packages/
 
+# CGI scripts
+api.cgi
+!api.cgi.example
+
