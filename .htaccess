@@ -1,0 +1,77 @@
+# ==============================================================================
+# Job-Hunting Mail Manager - rental_server .htaccess
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# 1. 基本設定 (Options / Index / Charset)
+# ------------------------------------------------------------------------------
+# CGIの実行を許可し、ディレクトリ一覧表示を無効化
+Options +ExecCGI -Indexes
+
+# .cgi 拡張子を CGI スクリプトとして認識
+AddHandler cgi-script .cgi
+
+# PATH_INFO (/api.cgi/api/...) を許可
+AcceptPathInfo On
+
+# デフォルトのトップページ
+DirectoryIndex index.html
+
+# デフォルト文字コード
+AddDefaultCharset UTF-8
+
+# ------------------------------------------------------------------------------
+# 2. セキュリティ設定 (ファイル・ディレクトリのアクセス制限)
+# ------------------------------------------------------------------------------
+
+# ドットから始まる隠しファイル (.env, .git, .gitignore など) へのアクセス拒否
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Python ソースコード、データファイル、設定ファイルへの直接アクセス拒否
+# ※ api.cgi, index.html, consent.html, assets/ 配下 (*.css, *.js) は許可
+<FilesMatch "\.(py|pyc|pyo|json|env|md|txt|sh|log)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# ------------------------------------------------------------------------------
+# 3. URL Rewrite 設定 (mod_rewrite)
+# ------------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # 【重要】Authorization ヘッダーを CGI 環境変数 (HTTP_AUTHORIZATION) に引き渡す
+    # (Apache CGI ではデフォルトで Authorization ヘッダーが欠落するため)
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # データ用ディレクトリ・ライブラリ群への直接アクセス拒否
+    RewriteRule ^(data|packages|__pycache__)/ - [F,L]
+
+    # /api/... へのリクエストを api.cgi/api/... へ内部リライト (クリーンURL対応)
+    # 既存の静的ファイル・ディレクトリが存在しない場合のみ適用
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^api(/.*)?$ api.cgi/api$1 [L,QSA]
+</IfModule>
+
+# mod_rewrite が利用できない環境向けのフォールバック
+<IfModule !mod_rewrite.c>
+    <IfModule mod_setenvif.c>
+        SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+    </IfModule>
+    RedirectMatch 403 ^/(data|packages|__pycache__)/
+</IfModule>
