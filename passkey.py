@@ -79,7 +79,7 @@ def verify_registration(response_json: dict, expected_challenge: str) -> dict:
     settings = get_settings()
     credential = verify_registration_response(
         credential=response_json,
-        expected_challenge=expected_challenge.encode("utf-8"),
+        expected_challenge=base64url_to_bytes(expected_challenge),
         expected_origin=settings.app_origin,
         expected_rp_id=settings.rp_id,
         require_user_verification=True
@@ -132,7 +132,7 @@ def verify_authentication(response_json: dict, expected_challenge: str) -> bool:
     try:
         credential = verify_authentication_response(
             credential=response_json,
-            expected_challenge=expected_challenge.encode("utf-8"),
+            expected_challenge=base64url_to_bytes(expected_challenge),
             expected_origin=settings.app_origin,
             expected_rp_id=settings.rp_id,
             credential_public_key=base64url_to_bytes(stored_cred["public_key"]),
