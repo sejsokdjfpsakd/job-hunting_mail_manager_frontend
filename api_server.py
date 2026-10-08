@@ -41,7 +41,8 @@ def health():
 @app.route("/api/auth/me")
 @require_ui_auth
 def auth_me():
-    return jsonify({"authenticated": True})
+    token = request.cookies.get("session_id")
+    return jsonify({"authenticated": True, "csrf_token": token})
 
 @app.route("/api/auth/logout", methods=["POST"])
 @require_ui_auth

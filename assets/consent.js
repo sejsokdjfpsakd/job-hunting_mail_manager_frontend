@@ -12,10 +12,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   
   document.getElementById('client-name').textContent = clientName;
   
+  let csrfToken = "";
   // First, verify session to ensure user is logged in
   try {
     const res = await fetch('/api.cgi/api/auth/me');
     if (!res.ok) throw new Error('Not logged in');
+    const data = await res.json();
+    csrfToken = data.csrf_token;
   } catch (e) {
     // If not logged in, redirect to login page (we can just redirect to index.html and they'll have to restart the flow)
     // We pass the current URL as a redirect parameter so they come back here after login
@@ -23,25 +26,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
   
-  function getCsrfToken() {
-    const name = "session_id=";
-    const decodedCookie = decodeURIComponent(document.cookie);
-    const ca = decodedCookie.split(';');
-    for(let i = 0; i <ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') c = c.substring(1);
-      if (c.indexOf(name) == 0) return c.substring(name.length, c.length);
-    }
-    return "";
-  }
-
   document.getElementById('approve-btn').addEventListener('click', async () => {
     try {
       const res = await fetch('/api.cgi/api/oauth/consent/approve', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
-          'X-CSRF-Token': getCsrfToken()
+          'X-CSRF-Token': csrfToken
         },
         body: JSON.stringify({ state, client_name: clientName })
       });
