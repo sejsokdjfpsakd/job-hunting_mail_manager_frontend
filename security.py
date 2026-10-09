@@ -125,6 +125,13 @@ def require_oauth_access_token(f):
         if not mcp_token:
             abort(401, "X-MCP-Access-Token missing")
             
+        settings = get_settings()
+        
+        # シングルユーザーモード対応: APIキー自体をアクセストークンとして使ってきた場合は特別に許可
+        if mcp_token == settings.api_key:
+            request.oauth_grant_id = "single_user_grant"
+            return f(*args, **kwargs)
+            
         from oauth_bridge import verify_access_token
         if is_dev_mode() and (mcp_token == "dev_token" or not mcp_token):
             request.oauth_grant_id = "dev_grant"
