@@ -82,13 +82,18 @@ def _ts(iso_or_dt) -> float:
 class RealSession:
     def __init__(self, settings: Settings):
         import ssl
-        from imap_tools import MailBoxStartTls
         self.delim = "/"
         self.prefix = ""
         self._current: tuple[str, bool] | None = None
         try:
-            mb = MailBoxStartTls(settings.imap_host, settings.imap_port, timeout=40,
-                                 ssl_context=ssl.create_default_context())
+            if settings.imap_port == 993:
+                from imap_tools import MailBox
+                mb = MailBox(settings.imap_host, settings.imap_port, timeout=40,
+                             ssl_context=ssl.create_default_context())
+            else:
+                from imap_tools import MailBoxStartTls
+                mb = MailBoxStartTls(settings.imap_host, settings.imap_port, timeout=40,
+                                     ssl_context=ssl.create_default_context())
             mb.login(settings.imap_user, settings.imap_password, initial_folder=None)
         except Exception:
             traceback.print_exc(file=sys.stderr)
